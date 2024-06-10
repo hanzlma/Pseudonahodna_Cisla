@@ -10,37 +10,71 @@ namespace Pseudonahodna_Cisla
     {
         
          static void Main(string[] args)
-        {
+         {
             Random rand = new Random();
+            int min, max, x;
+            //Nacteni a kontrola vstupnich hodnot
             Console.Write("Zadej minimalni hodnotu: ");
-            int min = Convert.ToInt32(Console.ReadLine());
-            Console.Write("Zadej maximalni hodnotu: ");
-            int max = Convert.ToInt32(Console.ReadLine());
-            Console.Write("Zadej pocet hodnot: ");
-            int x = Convert.ToInt32(Console.ReadLine());
+            try
+            {
+                min = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Nespravna vstupni hodnota");
+                Console.Read();
+                return;
+            }
 
-            int mean = (min+max)/2;
+            Console.Write("Zadej maximalni hodnotu: ");
+            try
+            {
+                max = Convert.ToInt32(Console.ReadLine());
+                if (min > max) { throw new Exception(); }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Nespravna vstupni hodnota");
+                Console.Read();
+                return;
+            }
+
+            Console.Write("Zadej pocet hodnot: ");
+            try
+            {
+                x = Convert.ToInt32(Console.ReadLine());
+                if (x < 1) { throw new Exception(); }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Nespravna vstupni hodnota");
+                Console.Read();
+                return;
+            }
+            //Generovani pseudonahodnych cisel podle normalniho a rovnomerneho rozdeleni
+            int mean = (min + max) / 2; 
             double std = Math.Abs(min + max) / 8.0;
-            double[] vals = new double [x];
+            double[] vals = new double[x];
             int[] rovn_rozd = new int[x];
-            for (int i = 0;i < x ;i++)
+            for (int i = 0; i < x; i++)
             {
                 double u1 = 1.0 - rand.NextDouble();
                 double u2 = 1.0 - rand.NextDouble();
                 double stdNorm = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
                 double Norm = mean + std * stdNorm;
-                Console.WriteLine(Norm.ToString());
                 vals[i] = Norm;
                 rovn_rozd[i] = rand.Next(min, max + 1);
+                Console.WriteLine(Norm.ToString()); //Vypsani vygenerovane hodnoty v normalnim rozdeleni
             }
-            Console.WriteLine();
-            Console.WriteLine("Test dobre shody");
+
+            Console.WriteLine("\nTest dobre shody");
             double ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8;
             ex1 = ex8 = 0.001 * x;
             ex2 = ex7 = 0.021 * x;
             ex3 = ex6 = 0.136 * x;
             ex4 = ex5 = 0.341 * x;
             //ocekavany pocet
+
             int gen1, gen2, gen3, gen4, gen5, gen6, gen7, gen8;
             gen1 = gen2 = gen3 = gen4 = gen5 = gen6 = gen7 = gen8 = 0;
             foreach(double val in vals)
@@ -73,6 +107,7 @@ namespace Pseudonahodna_Cisla
                         break;
                 }
             }
+            //Vypis testu dobre shody s ocekavanym normalnim rozdelenim pro hodnoty v normalnim rozdeleni
             Console.WriteLine("Generovani v normalnim rozdeleni");
             Console.WriteLine($"Usek 1 ({min} - {min + std}): Ocekavano {              ex1  }; Vygenerovano: {gen1}");
             Console.WriteLine($"Usek 2 ({min + std} - {min + 2*std}): Ocekavano {      ex2  }; Vygenerovano: {gen2}");
@@ -118,6 +153,7 @@ namespace Pseudonahodna_Cisla
                         break;
                 }
             }
+            //Vypis testu dobre shody s ocekavanym normalnim rozdelenim pro hodnoty v rovnomernem rozdeleni
             Console.WriteLine("Generovani v rovnomernem rozdeleni");
             Console.WriteLine($"Usek 1 ({min} - {min + std}): Ocekavano {ex1}; Vygenerovano: {gen1}");
             Console.WriteLine($"Usek 2 ({min + std} - {min + 2 * std}): Ocekavano {ex2}; Vygenerovano: {gen2}");
@@ -133,6 +169,6 @@ namespace Pseudonahodna_Cisla
 
             Console.ReadLine();
 
-        }
+         }
     }
 }
